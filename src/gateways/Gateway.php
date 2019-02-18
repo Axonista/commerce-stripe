@@ -906,7 +906,8 @@ class Gateway extends BaseGateway
 
         $event = new BuildGatewayRequestEvent([
             'transaction' => $transaction,
-            'metadata' => []
+			'metadata' => [],
+			'request' => [],
         ]);
 
         $this->trigger(self::EVENT_BUILD_GATEWAY_REQUEST, $event);
@@ -921,6 +922,8 @@ class Gateway extends BaseGateway
 
         // Allow other plugins to add metadata, but do not allow tampering.
         $request['metadata'] = array_merge($event->metadata, $metadata);
+
+		$request = array_merge($event->request, $request);
 
         if ($this->sendReceiptEmail) {
             $request['receipt_email'] = $transaction->getOrder()->email;
